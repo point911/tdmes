@@ -1,0 +1,16 @@
+java:
+  version: 8
+
+zookeeper_inventory_group: "{{ zookeeper_project_name }}"
+
+kafka_server_list: "{{ groups['tag_inventory_group_'+inventory_groups.kafka]|map('extract', hostvars, 'ec2_private_ip_address')|list }}"
+zookeeper_server_list: "{{ groups['tag_inventory_group_'+zookeeper_inventory_group]|map('extract', hostvars, 'ec2_private_ip_address')|list }}"
+
+jmx_ip: "{{ ec2_private_ip_address }}"
+jmx_rmi_port: 1088
+jmx_remote_port: 8088
+
+kafka:
+  listner_ip: "{{ ec2_private_ip_address }}"
+  advertised_host: "{{ ec2_private_ip_address }}"
+  jmx_opts: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname={{ jmx_ip }} -Dcom.sun.management.jmxremote.rmi.port={{ jmx_rmi_port }} -Dcom.sun.management.jmxremote.port={{ jmx_remote_port }} "

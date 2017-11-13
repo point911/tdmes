@@ -1,0 +1,27 @@
+---
+filebeat_create_config: true
+
+filebeat_modules:
+  - module: auditd
+    log:
+      enabled: true
+      var.paths:
+      - /var/log/audit/audit.log
+
+filebeat_output_elasticsearch_enabled: true
+filebeat_output_elasticsearch_hosts:
+  - "XXXXXXXXXXXXXXXXXXXX:9200"
+
+filebeat_output_logstash_enabled: false
+filebeat_output_logstash_hosts:
+  - "localhost:5044"
+
+filebeat_enable_logging: true
+filebeat_log_level: warning
+filebeat_log_dir: /var/log/mybeat
+filebeat_log_filename: mybeat.log
+
+filebeat_ssl_dir: /etc/pki/logstash
+filebeat_ssl_certificate_file: ""
+filebeat_ssl_key_file: ""
+filebeat_ssl_insecure: "true"

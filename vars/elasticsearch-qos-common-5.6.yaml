@@ -1,0 +1,13 @@
+es_version: "5.6.2"
+es_enable_xpack: true
+es_xpack_features: ["alerting","monitoring","graph","ml","security"]
+elasticsearch_cluster_name: topdanmark-cluster
+elasticsearch_discovery_zen_minimum_master_nodes: 1
+es_heap_size: "{{ (ansible_memtotal_mb / 2) | int }}m"
+
+es_data_dirs: ["/var/lib/elasticsearch"]
+
+es_plugins:
+  - plugin: ingest-geoip
+
+kibana_version: 5.6.2

@@ -1,0 +1,54 @@
+aws:
+  security_groups:
+    - name: "zookeeper_firehose_performance"
+      rules:
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 2181
+          to_port: 2181
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 2888
+          to_port: 2888
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 3888
+          to_port: 3888
+          cidr_ip: 0.0.0.0/0
+      rules_egress:
+        - proto: all
+          cidr_ip: 0.0.0.0/0
+
+      description: This is a security group for zookeeper_firehose_performance training instances
+
+  instances:
+    - name: "zookeeper_firehose_performance0"
+      inventory_group: "zookeeper_firehose_performance"
+      instance_type: "t2.medium"
+      security_group: "[u'zookeeper_firehose_performance', u'Internal Only']"
+      vpc_subnet_id: "subnet-79535f51"
+      volumes: "[{u'volume_size': 30, u'device_name': u'/dev/sda1'}]"
+
+    - name: "zookeeper_firehose_performance1"
+      inventory_group: "zookeeper_firehose_performance"
+      instance_type: "t2.medium"
+      security_group: "[u'zookeeper_firehose_performance', u'Internal Only']"
+      vpc_subnet_id: "subnet-79535f51"
+      volumes: "[{u'volume_size': 30, u'device_name': u'/dev/sda1'}]"
+
+    - name: "zookeeper_firehose_performance2"
+      inventory_group: "zookeeper_firehose_performance"
+      instance_type: "t2.medium"
+      security_group: "[u'zookeeper_firehose_performance', u'Internal Only']"
+      vpc_subnet_id: "subnet-79535f51"
+      volumes: "[{u'volume_size': 30, u'device_name': u'/dev/sda1'}]"
+
+
+  keypair: "ptopsworks"
+
+  region: "us-east-1"
+
+  image: "ami-f4cc1de2"

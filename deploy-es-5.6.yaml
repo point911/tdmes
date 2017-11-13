@@ -1,0 +1,91 @@
+---
+- name: Deploy master elasticsearch node(s)
+  hosts:
+    - tag_Name_qos_elk_5_6_2_master
+  user: vkaminskiy
+  become: yes
+  gather_facts: yes
+
+  vars_files:
+    - vars/elasticsearch-qos-common-5.6.yaml
+
+  roles:
+    - { role: elastic.elasticsearch,
+        es_instance_name: "master-node",
+        es_config: {
+          cluster.name: "{{ elasticsearch_cluster_name }}",
+          network.host: "{{ ansible_default_ipv4.address }}",
+          http.port: 9200,
+          transport.tcp.port: 9300,
+          node.data: false,
+          node.master: true,
+          bootstrap.memory_lock: false,
+          discovery.zen.minimum_master_nodes: "{{ elasticsearch_discovery_zen_minimum_master_nodes }}",
+          script.inline: true,
+          discovery.zen.ping.unicast.hosts: "{{ groups['tag_inventory_host_qos_es_5_6_2_master'] | map('extract', hostvars, 'ec2_private_ip_address') | list |map('map_format', '%s:9300' ) | list | join(', ') }}",
+          thread_pool.bulk.queue_size: 2000,
+          thread_pool.search.queue_size: 10000
+        }
+      }
+
+
+- name: Deploy data elasticsearch node(s)
+  hosts:
+    - tag_inventory_host_qos_es_5_6_2_data
+  user: vkaminskiy
+  become: yes
+  gather_facts: yes
+
+  vars_files:
+    - vars/elasticsearch-qos-common-5.6.yaml
+
+  roles:
+    - { role: elastic.elasticsearch,
+        es_instance_name: "data-node",
+        es_data_node: true,
+        es_config: {
+          network.host: "{{ ansible_default_ipv4.address }}",
+          http.port: 9200,
+          transport.tcp.port: 9300,
+          node.data: true,
+          node.master: false,
+          bootstrap.memory_lock: false,
+          cluster.name: "{{ elasticsearch_cluster_name }}",
+          discovery.zen.minimum_master_nodes: "{{ elasticsearch_discovery_zen_minimum_master_nodes }}",
+          script.inline: true,
+          discovery.zen.ping.unicast.hosts: "{{ groups['tag_inventory_host_qos_es_5_6_2_master'] | map('extract', hostvars, 'ec2_private_ip_address') | list |map('map_format', '%s:9300' ) | list | join(', ') }}",
+          thread_pool.bulk.queue_size: 2000,
+          thread_pool.search.queue_size: 10000
+        }
+      }
+
+
+- name: Deploy KIBANA client elasticsearch node(s)
+  hosts:
+    - tag_Name_qos_elk_5_6_2_client
+  user: vkaminskiy
+  become: yes
+  gather_facts: yes
+
+  vars_files:
+    - vars/elasticsearch-qos-common-5.6.yaml
+
+  roles:
+    - { role: elastic.elasticsearch,
+        es_instance_name: "client-node",
+        es_config: {
+          network.host: "{{ ansible_default_ipv4.address }}",
+          http.port: 9200,
+          transport.tcp.port: 9300,
+          node.data: false,
+          node.master: false,
+          bootstrap.memory_lock: false,
+          cluster.name: "{{ elasticsearch_cluster_name }}",
+          discovery.zen.minimum_master_nodes: "{{ elasticsearch_discovery_zen_minimum_master_nodes }}",
+          script.inline: true,
+          discovery.zen.ping.unicast.hosts: "{{ groups['tag_inventory_host_qos_es_5_6_2_master'] | map('extract', hostvars, 'ec2_private_ip_address') | list |map('map_format', '%s:9300' ) | list | join(', ') }}",
+          thread_pool.bulk.queue_size: 2000,
+          thread_pool.search.queue_size: 10000
+        }
+      }
+    - { role: kibana }

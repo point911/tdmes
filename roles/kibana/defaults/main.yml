@@ -1,0 +1,20 @@
+---
+kibana_version: 5.4.1
+
+kibana:
+  host: 0.0.0.0
+  install_dir: /usr/share/kibana4/
+  port: 5601
+
+  tarball: kibana-{{ kibana_version }}-linux-x86_64
+  download_base_url: https://artifacts.elastic.co/downloads/kibana/
+  # Used to determine which config file to use
+
+  elasticsearch:
+    host: "{{ ec2_private_ip_address }}"
+    port: 9200
+
+  plugins:
+    - plugin_name: x-pack
+      plugin_dir: x-pack
+

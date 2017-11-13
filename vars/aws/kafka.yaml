@@ -1,0 +1,43 @@
+inventory_groups:
+  kafka: "{{ project_name }}"
+
+env:
+  name: "{{ project_name }}"
+  aws:
+    region: us-east-1
+    security_group:
+      name: "{{ project_name }}"
+      rules:
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 9092
+          to_port: 9092
+          cidr_ip: 0.0.0.0/0
+      rules_egress:
+        - proto: all
+          cidr_ip: "0.0.0.0/0"
+
+    groups:
+      - node_type: kafka
+        instances:
+          number: 3
+          name: "{{ project_name }}"
+          type: t2.medium
+          # Termination by this criteria
+          inventory_group: "{{ inventory_groups.kafka }}"
+          security_groups: ["{{ project_name }}", 'Internal Only']
+          vpc_subnet_id: "subnet-79535f51"
+          volumes:
+            - device_name: /dev/sda1
+              volume_size: 30
+
+    key:
+      name: "ptopsworks"
+
+    image: "ami-f4cc1de2" # Xenial
+
+
+

@@ -1,0 +1,18 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+*.retry
+# Servers private keys
+keys
+
+
+aws.yaml
+deploy.yaml
+
+metavars.yaml
+*~
+
+*.pyc
+
+extra_vars.json
+*.log
+.DS_Store
